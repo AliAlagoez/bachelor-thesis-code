@@ -1,10 +1,18 @@
-# virtuelle Umgebung
+# Virtual environment
 venv/
 
-# Python Cache
+# Python cache
 __pycache__/
 *.pyc
 
-# Betriebssystem
+# Operating system files
 .DS_Store
 Thumbs.db
+
+# Project-generated data and results
+data/
+results/
+
+# Editor / IDE configuration
+.vscode/
+.idea/

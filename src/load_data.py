@@ -3,16 +3,13 @@ import pandas as pd
 
 def load_price_csv(path: str) -> pd.DataFrame:
     """
-    Lädt Preis-CSV und gibt DataFrame mit Index 'date' und Spalte 'close' zurück.
-
-    Unterstützt:
-    - CoinMarketCap-Export mit 'timeClose' + 'close'
-    - Klassische CSV mit 'Date'/'date' + 'Close'/'close'
+    Loads a price CSV file and returns a DataFrame indexed by date
+    with a single column containing closing prices.
     """
-
+    # Read CSV
     df = pd.read_csv(path, sep=None, engine="python")
 
-    # --- Datumsspalte finden ---
+    # Find date column
     if "timeClose" in df.columns:
         date_col = "timeClose"
     elif "Date" in df.columns:
@@ -20,9 +17,9 @@ def load_price_csv(path: str) -> pd.DataFrame:
     elif "date" in df.columns:
         date_col = "date"
     else:
-        raise ValueError(f"Keine Datumsspalte gefunden in {path}. Erwartet z.B. 'timeClose' oder 'Date'.")
+        raise ValueError(f"No date column found in {path}. Expected e.g. 'timeClose' or 'Date'.")
 
-    # --- Close-Spalte finden ---
+    # Find the Close column
     if "close" in df.columns:
         close_col = "close"
     elif "Close" in df.columns:
@@ -30,25 +27,27 @@ def load_price_csv(path: str) -> pd.DataFrame:
     elif "Adj Close" in df.columns:
         close_col = "Adj Close"
     else:
-        raise ValueError(f"Keine Close-Spalte gefunden in {path}. Erwartet z.B. 'close' oder 'Close'.")
+        raise ValueError(f"No close price column found in {path}. Expected e.g. 'close' or 'Close'.")
 
+    # Select and rename relevant columns
     out = df[[date_col, close_col]].copy()
 
-    # Datum parsen (bei CoinMarketCap ist es ISO-Zeitstempel)
+    # Parse date column 
     out["date"] = pd.to_datetime(out[date_col], errors="coerce").dt.date
     out["date"] = pd.to_datetime(out["date"], errors="coerce")
 
-    # Close numeric machen
+    # Close to numeric
     out["close"] = pd.to_numeric(out[close_col], errors="coerce")
 
-    # Aufräumen
+    # Remove invalid or missing observations
     out = out.dropna(subset=["date", "close"])
     out = out[out["close"] > 0]
     out = out.sort_values("date")
 
-    # Doppelte Tage: letzten Wert nehmen (falls vorhanden)
+    # Handle duplicate dates by keeping the last available observation
     out = out.groupby("date", as_index=False)["close"].last()
 
+    # Set date as index
     out = out.set_index("date")
 
     return out

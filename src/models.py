@@ -5,10 +5,14 @@ from statsmodels.tsa.arima.model import ARIMA
 
 def baseline_zero_return(train_df, test_row, y_col="returns"):
     """
-    Naive Forecast nach Hyndman: Prognose für t+1 ist der zuletzt beobachtete Wert (Persistenz).
-    Für Renditen: r̂_{t+1} = r_t
+    Naive benchmark forecast following Hyndman's persistence principle.
+
+    The one-step-ahead forecast equals the last observed return:
+    r̂_{t+1} = r_t
     """
     y = train_df[y_col].dropna()
+
+    # Fallback if no historical data is available
     if len(y) == 0:
         return 0.0
     return float(y.iloc[-1])
@@ -16,18 +20,18 @@ def baseline_zero_return(train_df, test_row, y_col="returns"):
 import warnings
 from statsmodels.tools.sm_exceptions import ConvergenceWarning
 
+# Suppress non-critical warnings for cleaner console output during rolling estimation
 warnings.simplefilter("ignore", ConvergenceWarning)
 warnings.simplefilter("ignore", UserWarning)
 
-
 def arima_101(train_df, test_row, y_col="returns"):
     """
-    Kleines, stabiles ARIMA(1,0,1) auf Renditen.
-    Trainiert nur auf historischen Returns und prognostiziert den nächsten Wert.
+    Fits an ARIMA(1,0,1) model to historical returns and produces
+    a one-step-ahead forecast.
     """
     y = train_df[y_col].dropna().values
 
-    # Falls zu wenige Daten da sind, fallback auf Baseline
+    # If there is insufficient data, fallback
     if len(y) < 30:
         return 0.0
 
@@ -37,24 +41,24 @@ def arima_101(train_df, test_row, y_col="returns"):
         y_hat = fitted.forecast(steps=1)[0]
         return float(y_hat)
     except Exception:
-        # falls ARIMA mal zickt -> Baseline, damit Backtest nie crasht
+        # Fallback in case of issues
         return 0.0
 
 def ml_hist_gb(train_df, test_row, y_col="returns", feature_cols=None):
     """
-    Schnelles Gradient Boosting Modell (scikit-learn).
-    - Kein langes Training
-    - Kein GPU
-    - Sehr robust
+    Histogram-based Gradient Boosting regression model.    
+
+    The model is trained on engineered return-based features and used
+    to generate a one-step-ahead prediction.
     """
 
     if feature_cols is None:
-        raise ValueError("feature_cols muss angegeben werden (Liste der Feature-Spalten).")
+        raise ValueError("feature_cols must be provided as a list of feature column names.")
 
-    # Trainingsdaten ohne NaNs
+    # Training data without NaNs
     train = train_df.dropna(subset=feature_cols + [y_col])
 
-    # Wenn zu wenig Daten -> fallback
+    # Fallback if the training sample is too small
     if len(train) < 80:
         return 0.0
 
@@ -62,7 +66,7 @@ def ml_hist_gb(train_df, test_row, y_col="returns", feature_cols=None):
     y_train = train[y_col].values
     X_test = test_row[feature_cols].values
 
-    # stabiles Modell
+    # Configure a stable gradient boosting model
     model = HistGradientBoostingRegressor(
         max_depth=3,
         learning_rate=0.1,

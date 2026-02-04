@@ -9,7 +9,7 @@ Eine Analyse der Vorhersagequalität in stabilen und volatilen Marktphasen
 **Studiengang:**    Wirtschaftsinformatik (B.Sc.)  
 **Hochschule:**     HTW Berlin  
 **Erstprüfer:**     Prof. Dr. Axel Hochstein  
-**Zweitprüfer:**    Prof. Dr. Martin Spott
+**Zweitprüfer:**    Prof. Dr. Martin Spott  
 **Abgabedatum:**    06.02.2026
 
 
@@ -41,6 +41,8 @@ Die Software dient der empirischen Untersuchung der Prognosegüte und Robustheit
 - **Autor der Software:**               Ali Alagöz  
 - **Datenquelle:**                      Yahoo Finance
 
+Die verwendeten Preisdaten wurden über Yahoo Finance bezogen und können mit dem im Repository enthaltenen Skript `download_yahoo.py` reproduziert werden.
+
 
 ## Zeitraum
 
@@ -48,7 +50,7 @@ Die Software dient der empirischen Untersuchung der Prognosegüte und Robustheit
 - Softwareentwicklung und Auswertung:   12/2025 – 01/2026  
 
 
-## Datenformate und -größe (Welche? Wie viel?)
+## Datenformate
 
 - Preisdaten:                           BTC.csv, ETH.csv  
 - Ergebnisdateien:                      metrics.csv 
@@ -65,8 +67,9 @@ Die Software dient der empirischen Untersuchung der Prognosegüte und Robustheit
 
 ## Ablageort
 
-- Quellcode:                            Der vollständige Python-Code zur empirischen Analyse ist in einem GitHub-Repository abgelegt und dient der Versionierung sowie der Nachvollziehbarkeit der Implementierung.  
-- Link:                                 Link nicht vergessen
+Der vollständige Code zur empirischen Analyse ist in einem GitHub-Repository abgelegt und dient der Versionierung sowie der Nachvollziehbarkeit der Implementierung.  
+
+- Link:                                 https://github.com/AliAlagoez/bachelor-thesis-code
 
 
 ## Projektstruktur
@@ -83,6 +86,7 @@ src                 # Implementierung der Modelle und Backtests
     regimes.py      # Volatilitätsbasierte Marktphasen
 main.py             # Hauptskript
 
+
 ## Setup
 
 ```bash
@@ -90,7 +94,11 @@ python -m venv venv
 
 .\venv\Scripts\Activate.ps1
 
-pip install pandas numpy scikit-learn statsmodels
+pip install -r requirements.txt
 
+# Download historical price data from Yahoo Finance
+python download_yahoo.py
+
+# Run the empirical analysis
 python main.py
-
+```
