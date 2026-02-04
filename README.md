@@ -67,9 +67,9 @@ Die verwendeten Preisdaten wurden über Yahoo Finance bezogen und können mit de
 
 ## Ablageort
 
-Der vollständige Code zur empirischen Analyse ist in einem GitHub-Repository abgelegt und dient der Versionierung sowie der Nachvollziehbarkeit der Implementierung.  
+Der vollständige Code zur empirischen Analyse ist in einem GitHub-Repository abgelegt.
 
-- Link:                                 https://github.com/AliAlagoez/bachelor-thesis-code
+- Link:             https://github.com/AliAlagoez/bachelor-thesis-code
 
 
 ## Projektstruktur

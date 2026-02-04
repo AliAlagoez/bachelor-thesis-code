@@ -9,9 +9,12 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Project-generated data and results
-data/
-results/
+# Project-generated data files
+data/*.csv
+
+# Project-generated result files
+results/*.csv
+
 
 # Editor / IDE configuration
 .vscode/
