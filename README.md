@@ -90,15 +90,18 @@ main.py             # Hauptskript
 ## Setup
 
 ```bash
+# Erstellen einer virtuellen Python-Umgebung
 python -m venv venv
 
+# Aktivieren der virtuellen Umgebung (Windows / PowerShell)
 .\venv\Scripts\Activate.ps1
 
+# Installation aller benötigten Python-Abhängigkeiten
 pip install -r requirements.txt
 
-# Download historical price data from Yahoo Finance
-python download_yahoo.py
+# Herunterladen der historischen Preisdaten von Yahoo Finance
+python src/download_yahoo.py
 
-# Run the empirical analysis
+# Start der empirischen Analyse
 python main.py
 ```
