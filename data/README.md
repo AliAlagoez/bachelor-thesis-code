@@ -1,1 +1,1 @@
-Generated locally via download_yahoo.py
+Generate locally via download_yahoo.py
