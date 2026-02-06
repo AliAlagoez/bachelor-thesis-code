@@ -1,1 +1,1 @@
-Generated locally via main.py
+Generate locally via main.py
